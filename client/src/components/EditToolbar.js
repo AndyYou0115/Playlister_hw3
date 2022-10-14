@@ -30,6 +30,7 @@ function EditToolbar() {
     return (
         <span id="edit-toolbar">
             <input
+                style={{fontSize: 53}}
                 type="button"
                 id='add-song-button'
                 disabled={editStatus}

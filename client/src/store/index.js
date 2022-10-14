@@ -169,6 +169,27 @@ export const useGlobalStore = () => {
         asyncLoadIdNamePairs();
     }
 
+    store.createNewList = function() {
+        async function asyncCreateNewList() {
+            // MAKE THE NEW LIST
+            let newList = {
+                "name": "Untitled "+ store.newListCounter,
+                "songs": []
+            }; 
+
+            const response = await api.createPlaylist(newList);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: response.data.playlist
+                });
+                store.history.push("/playlist/" + response.data.playlist._id);
+            }
+        }
+        asyncCreateNewList(); 
+    }
+    
+
     store.setCurrentList = function (id) {
         async function asyncSetCurrentList(id) {
             let response = await api.getPlaylistById(id);

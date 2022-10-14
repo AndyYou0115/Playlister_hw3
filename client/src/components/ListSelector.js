@@ -18,6 +18,7 @@ const ListSelector = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+    
     let listCard = "";
     if (store) {
         listCard = store.idNamePairs.map((pair) => (
@@ -31,17 +32,16 @@ const ListSelector = () => {
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">
-            <div id="playlist-selector-heading">
+            <div id="playlist-selector-heading" style={{fontSize: 48}}>
                 <input
                     type="button"
                     id="add-list-button"
                     onClick={handleCreateNewList}
                     className="playlister-button"
                     value="+" />
-                Your Lists
-            </div>                {
-                    listCard
-                }
+                &nbsp;&nbsp;&nbsp;Your Lists
+            </div> 
+                {listCard}
             </div>
         </div>)
 }
