@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
+import DeleteListModal from './DeleteListModal.js';
+
 /*
     This is a card in our list of playlists. It lets select
     a list for editing and it has controls for changing its 
@@ -50,6 +52,11 @@ function ListCard(props) {
         setText(event.target.value );
     }
 
+    function handleDeleteList(event) {
+        let id = event.target.id.substring("list-".length);
+        store.markListForDelete(id);
+    }
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -75,6 +82,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
+                onClick={handleDeleteList}
                 value={"\u2715"}
             />
             <input
@@ -99,7 +107,11 @@ function ListCard(props) {
             />;
     }
     return (
-        cardElement
+        <>
+            {cardElement}
+            <DeleteListModal></DeleteListModal>
+        </>
+  
     );
 }
 

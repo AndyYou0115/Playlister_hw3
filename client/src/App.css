@@ -190,6 +190,33 @@ input {
   border-style: groove;
 }
 
+.modal-center {
+  display: grid;
+  grid-template-columns: 30% 65%;
+  grid-template-rows: 33% 33% 33%;
+  gap: 10px 20px;
+  font-size: 48pt;
+}
+
+.modal-root {
+  position: relative;
+  max-width: 1200vw;
+  max-height: 600vh;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  background: var(--swatch-complement);
+  cursor: default;
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 5px 10px #888888;
+}
+
+.modal-root > * {
+  padding: 1rem;
+}
+
 .modal-dialog > * {
   padding: 1rem;
 }
@@ -230,6 +257,11 @@ input {
 
 #confirm-cancel-container {
   text-align:center;
+}
+
+.modal-button {
+  font-size: 20pt;
+  margin:5px;
 }
 
 /* ANIMATIONS
