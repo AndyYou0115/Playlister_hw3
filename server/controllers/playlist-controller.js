@@ -127,7 +127,7 @@ removeSongAt = async (req, res) => {
             return res.status(400).json({ success: false, error: err })
         }
 
-    list.songs.splice(req.body, 1);
+    list.songs.splice(req.params.index, 1); 
     list
         .save()
         .then(() => {
