@@ -3,6 +3,7 @@ import { React } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
 import DeleteListModal from './components/DeleteListModal.js';
+import DeleteSongModal from './components/DeleteSongModal.js';
 
 /*
     This is our application's top-level component.
@@ -14,6 +15,7 @@ const App = () => {
         <Router>
             <Banner />
             <DeleteListModal></DeleteListModal>
+            <DeleteSongModal></DeleteSongModal>
             <Switch>
                 <Route path="/" exact component={ListSelector} />
                 <Route path="/playlist/:id" exact component={PlaylistCards} />

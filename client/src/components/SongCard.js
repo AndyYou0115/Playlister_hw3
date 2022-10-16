@@ -3,9 +3,15 @@ import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
-
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
+
+    function handleDeleteSong(event) {
+        event.stopPropagation();
+        let i = event.target.id.substring("remove-song-".length); 
+        store.markSongForDelete(i);
+    }
+
     return (
         <div
             key={index}
@@ -24,6 +30,7 @@ function SongCard(props) {
                 id={"remove-song-" + index}
                 className="list-card-button"
                 value={"\u2715"}
+                onClick={handleDeleteSong}
             />
         </div>
     );

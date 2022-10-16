@@ -1,4 +1,5 @@
 import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
+import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction.js';
 
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
@@ -24,6 +25,8 @@ export const GlobalStoreActionType = {
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     DELETE_LIST: "DELETE_LIST",
     TOGGLE_DELETE_LIST_MODAL: "TOGGLE_DELETE_LIST_MODAL",
+    MARK_SONG_FOR_DELETION: "MARKED_SONG_FOR_DELETION",
+    TOGGLE_DELETE_SONG_MODAL: "TOGGLE_DELETE_SONG_MODAL",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -39,6 +42,8 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         markedId: "",
         deleteListModalOpen: false,
+        deleteSongModalOpen: false,
+        markedIndex: -1,
         markedInfo: null,
         listNameActive: false
     });
@@ -56,6 +61,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
                 });
@@ -68,6 +75,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
                 })
@@ -80,6 +89,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
                 })
@@ -92,6 +103,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
                 });
@@ -104,6 +117,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: payload[0],
                     deleteListModalOpen: payload[2],
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: payload[1],
                     listNameActive: false
                 }); 
@@ -116,6 +131,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: "",
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: null,
                     listNameActive: false
                 });
@@ -128,6 +145,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: payload,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
                 });
@@ -140,6 +159,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: true
                 });
@@ -151,7 +172,35 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: payload,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
+                    listNameActive: store.listNameActive
+                });
+            }
+            case GlobalStoreActionType.TOGGLE_DELETE_SONG_MODAL: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    markedId: store.markedId,
+                    deleteListModalOpen: false,
+                    deleteSongModalOpen: payload,
+                    markedIndex: store.markedIndex,
+                    markedInfo: store.markedInfo,
+                    listNameActive: store.listNameActive
+                });
+            }
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    markedId: store.markedId,
+                    deleteListModalOpen: false,
+                    deleteSongModalOpen: payload[2],
+                    markedIndex: payload[0],
+                    markedInfo: payload[1],
                     listNameActive: store.listNameActive
                 });
             }
@@ -270,7 +319,6 @@ export const useGlobalStore = () => {
                         type: GlobalStoreActionType.DELETE_LIST,
                         payload: response.data.idNamePairs
                     });
-                    store.toggleModals("delete-list-modal", false)
                     store.loadIdNamePairs();
                 }
             }
@@ -285,12 +333,23 @@ export const useGlobalStore = () => {
                 storeReducer ({
                     type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
                     payload: [response.data.playlist._id, response.data.playlist, true]
-                });
-                // store.toggleModals("delete-list-modal", true);
-                
+                });                
             }
         }
         asyncMarkListForDelete(id);
+    }
+
+    store.markSongForDelete = function(index) {
+        async function asyncMarkSongForDelete() {
+            const response = await api.getPlaylistById(store.currentList._id);
+            if(response.data.success) {
+                storeReducer ({
+                    type: GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+                    payload: [index, response.data.playlist, true]
+                });                
+            }
+        }
+        asyncMarkSongForDelete();
     }
 
     store.addSong = function() {
@@ -306,8 +365,25 @@ export const useGlobalStore = () => {
         asyncAddSong();
     }
 
+    store.deleteSongAt = function() {
+        async function asyncDeleteSongAt() {
+            if(store.currentList) {
+                const response = await api.removeSongAt(store.currentList._id, store.markedIndex);
+                if(response.data.success) {
+                    store.setCurrentList(response.data.playlist._id);
+                }
+            }
+        }
+        asyncDeleteSongAt();
+    }
+
     store.addAddSongTransaction = function() {
         let transaction = new AddSong_Transaction(store);
+        tps.addTransaction(transaction);
+    }
+
+    store.addDeleteSongTransaction = function(index) {
+        let transaction = new DeleteSong_Transaction(store);
         tps.addTransaction(transaction);
     }
 
@@ -315,6 +391,12 @@ export const useGlobalStore = () => {
         if(type === "delete-list-modal") {
             storeReducer({
                 type: GlobalStoreActionType.TOGGLE_DELETE_LIST_MODAL,
+                payload: mode
+            });
+        }
+        else if(type === "delete-song-modal") {
+            storeReducer({
+                type: GlobalStoreActionType.TOGGLE_DELETE_SONG_MODAL,
                 payload: mode
             });
         }
