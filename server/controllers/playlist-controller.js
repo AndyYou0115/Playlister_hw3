@@ -127,13 +127,13 @@ removeSongAt = async (req, res) => {
             return res.status(400).json({ success: false, error: err })
         }
 
-    list.songs.splice(req.params.index, 1); 
+    let removed = list.songs.splice(req.params.index, 1); 
     list
         .save()
         .then(() => {
             return res.status(201).json({
                 success: true,
-                playlist: list,
+                playlist: removed[0],
                 message: 'Song Removed!',
             })
         })
@@ -146,6 +146,31 @@ removeSongAt = async (req, res) => {
     })
 }
 
+createSongAt = async (req, res) => {
+    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        list.songs.splice(req.body.songIndex, 0, req.body.songInfo);
+        list
+            .save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    playlist: list,
+                    message: 'Song Created!',
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error,
+                    message: 'Song Not Created!',
+                })
+            })
+    })
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
@@ -153,5 +178,6 @@ module.exports = {
     getPlaylistById,
     deletePlaylistById,
     createSong,
-    removeSongAt
+    removeSongAt,
+    createSongAt
 }

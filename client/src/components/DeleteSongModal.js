@@ -6,7 +6,7 @@ function DeleteSongModal() {
         let name = "";
 
         if (store.markedInfo !== null) {
-            if(store.markedInfo.songs.length === 0 || store.markedIndex < 0) {
+            if(typeof store.markedInfo.songs === 'undefined' || store.markedIndex < 0 || store.markedInfo.songs.length <= 0) {
                 name = "";
             }
             else {

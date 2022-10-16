@@ -19,7 +19,7 @@ app.use(express.json())
 
 app.all('/*', (req, res, next) => {
     console.log(`${req.method} ${req.originalUrl}`)
-    console.debug(req.params.index)
+    console.debug(req.body)
 
     next()
 })

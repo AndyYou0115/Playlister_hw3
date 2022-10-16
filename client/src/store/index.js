@@ -27,7 +27,8 @@ export const GlobalStoreActionType = {
     TOGGLE_DELETE_LIST_MODAL: "TOGGLE_DELETE_LIST_MODAL",
     MARK_SONG_FOR_DELETION: "MARKED_SONG_FOR_DELETION",
     TOGGLE_DELETE_SONG_MODAL: "TOGGLE_DELETE_SONG_MODAL",
-    UPDATE_MARKEDINDEX: "UPDATE_MARKEDINDEX"
+    UPDATE_MARKEDINDEX: "UPDATE_MARKEDINDEX",
+    UPDATE_MARKEDINFO: "UPDATE_MARKEDINFO"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -218,6 +219,19 @@ export const useGlobalStore = () => {
                     listNameActive: store.listNameActive
                 });
             }
+            case GlobalStoreActionType.UPDATE_MARKEDINFO: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    markedId: store.markedId,
+                    deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    markedIndex: store.markedIndex,
+                    markedInfo: payload,
+                    listNameActive: store.listNameActive
+                });
+            }
             default:
                 return store;
         }
@@ -379,6 +393,18 @@ export const useGlobalStore = () => {
         asyncAddSong();
     }
 
+    store.addSongAt = function() {
+        async function asyncAddSongAt() {
+            console.log(store);
+            const response = await api.createSongAt(store.currentList._id, store.markedIndex, store.markedInfo.songs[store.markedIndex]);
+            if(response.data.success) {
+                console.log(response.data.playlist);
+                store.setCurrentList(store.currentList._id);
+            }
+        }
+        asyncAddSongAt();
+    }
+
     store.deleteSongAt = function() {
         async function asyncDeleteSongAt() {
             if(store.currentList) {
@@ -386,7 +412,7 @@ export const useGlobalStore = () => {
                 let index = store.markedIndex
                 const response = await api.removeSongAt(id, index);
                 if(response.data.success) {
-                    store.setCurrentList(response.data.playlist._id);
+                    store.setCurrentList(store.currentList._id);
                 }
             }
         }
@@ -397,7 +423,7 @@ export const useGlobalStore = () => {
         let transaction = new AddSong_Transaction(store);
         tps.addTransaction(transaction);
         storeReducer ({
-            type: GlobalStoreActionType.UPDATE_MARKEDINFO,
+            type: GlobalStoreActionType.UPDATE_MARKEDINDEX,
             payload: store.idNamePairs.length+1
         })
     }
