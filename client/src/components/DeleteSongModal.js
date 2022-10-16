@@ -7,10 +7,12 @@ function DeleteSongModal() {
 
         if (store.markedInfo !== null) {
             if(typeof store.markedInfo.songs === 'undefined' || store.markedIndex < 0 || store.markedInfo.songs.length <= 0) {
-                name = "";
-            }
-            else {
-                name = store.markedInfo.songs[store.markedIndex].title;
+                if(typeof store.markedInfo.songs[store.markedIndex] === 'undefined') {
+                    name = "";
+                }
+                else {
+                    name = store.markedInfo.songs[store.markedIndex].title;
+                }
             }
         }
 
