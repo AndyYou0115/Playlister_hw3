@@ -1,7 +1,10 @@
+import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
+
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 export const GlobalStoreContext = createContext({});
+
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -34,7 +37,7 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        deleteListId: "FAILFAILFAIL",
+        markedId: "",
         deleteListModalOpen: false,
         markedInfo: null,
         listNameActive: false
@@ -51,7 +54,7 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -63,7 +66,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -75,7 +78,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -87,7 +90,7 @@ export const useGlobalStore = () => {
                     idNamePairs: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -99,7 +102,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    deleteListId: payload[0],
+                    markedId: payload[0],
                     deleteListModalOpen: payload[2],
                     markedInfo: payload[1],
                     listNameActive: false
@@ -111,7 +114,7 @@ export const useGlobalStore = () => {
                     idNamePairs: payload,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    deleteListId: "",
+                    markedId: "",
                     deleteListModalOpen: false,
                     markedInfo: null,
                     listNameActive: false
@@ -123,7 +126,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: payload,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -135,7 +138,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: false,
                     markedInfo: store.markedInfo,
                     listNameActive: true
@@ -146,7 +149,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    markedId: store.markedId,
                     deleteListModalOpen: payload,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -259,7 +262,7 @@ export const useGlobalStore = () => {
 
     store.deletePlaylist = function() {
         async function asyncDeletePlaylistById() {
-            let response = await api.deletePlaylistById(store.deleteListId);
+            let response = await api.deletePlaylistById(store.markedId);
             if (response.data.success) {
                 let response = await api.getPlaylistPairs();
                 if (response.data.success) {
@@ -288,6 +291,24 @@ export const useGlobalStore = () => {
             }
         }
         asyncMarkListForDelete(id);
+    }
+
+    store.addSong = function() {
+        async function asyncAddSong() {
+            if(store.currentList) {
+                let newSong = {"title": "Untitled", "artist": "Unknown", "youTubeId": "dQw4w9WgXcQ"};
+                const response = await api.createSong(store.currentList._id, newSong);
+                if(response.data.success) {
+                    store.setCurrentList(response.data.playlist._id);
+                }
+            }
+        }
+        asyncAddSong();
+    }
+
+    store.addAddSongTransaction = function() {
+        let transaction = new AddSong_Transaction(store);
+        tps.addTransaction(transaction);
     }
 
     store.toggleModals = function(type, mode) {
