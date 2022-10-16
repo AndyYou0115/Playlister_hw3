@@ -1,43 +1,43 @@
-import React, { useContext} from 'react'
+import React, { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 
 function DeleteListModal() {
         const { store } = useContext(GlobalStoreContext);
         let name = "";
-        let idName = "delete-list-modal"
+        //let clasName = "modal";
 
-        if(store.DeleteListModal){
-            idName = idName + "is-visible";
-        }
+        //if(store.deleteListModalOpen){
+            //clasName = clasName + " is-visible";
+        //}
 
-        if (store.currentList) {
-            name = store.currentList.name;
+        if (store.markedInfo !== null) {
+            name = store.markedInfo.name;
         }
 
         return (
             <div 
-                class="modal" 
-                id={idName}
+                className={store.deleteListModalOpen?"modal is-visible":"modal"} 
+                id="delete-list-modal"
                 data-animation="slideInOutLeft">
-                    <div class="modal-root" id='verify-delete-list-root'>
-                        <div class="modal-header">
+                    <div className="modal-root" id='verify-delete-list-root'>
+                        <div className="modal-north">
                             Delete playlist?
                         </div>
-                        <div class="modal-center">
-                            <div class="modal-dialog" style={{width:900, height:100, fontSize:54}}>
+                        <div className="modal-center">
+                            <div className="modal-center-content" style={{width:900, height:100, fontSize:40}}>
                                 Are you sure you wish to permanently delete the <span>{name}</span> playlist?
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div className="modal-south">
                             <input type="button" 
                                 id="delete-list-confirm-button" 
-                                class="modal-button" 
-                                onClick={store.deletePlaylist()}
+                                className="modal-button" 
+                                onClick={() => {store.deletePlaylist()}}
                                 value='Confirm' />
                             <input type="button" 
                                 id="delete-list-cancel-button" 
-                                class="modal-button" 
-                                onClick={store.toggleModals("delete-list-modal", false)}
+                                className="modal-button" 
+                                onClick={() => store.toggleModals("delete-list-modal", false)}
                                 value='Cancel' />
                         </div>
                     </div>

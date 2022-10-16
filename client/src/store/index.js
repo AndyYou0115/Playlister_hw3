@@ -18,6 +18,9 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    DELETE_LIST: "DELETE_LIST",
+    TOGGLE_DELETE_LIST_MODAL: "TOGGLE_DELETE_LIST_MODAL",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -31,6 +34,9 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
+        deleteListId: "FAILFAILFAIL",
+        deleteListModalOpen: false,
+        markedInfo: null,
         listNameActive: false
     });
 
@@ -47,6 +53,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: false
                 });
             }
@@ -58,6 +65,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: false
                 })
             }
@@ -69,6 +77,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: false
                 })
             }
@@ -80,6 +89,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: false
                 });
             }
@@ -89,19 +99,21 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    deleteListId: payload,
-                    deleteListModalOpen: false,
+                    deleteListId: payload[0],
+                    deleteListModalOpen: payload[2],
+                    markedInfo: payload[1],
                     listNameActive: false
-                });
+                }); 
             }
             //DELETE A LIST
             case GlobalStoreActionType.DELETE_LIST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
+                    currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    deleteListId: store.deleteListId,
+                    deleteListId: "",
                     deleteListModalOpen: false,
+                    markedInfo: null,
                     listNameActive: false
                 });
             }
@@ -113,6 +125,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: false
                 });
             }
@@ -124,16 +137,18 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: false,
+                    markedInfo: store.markedInfo,
                     listNameActive: true
                 });
             }
-            case GlobalStoreActionType.TOGGLE_DELETE_LIST_MODALS: {
+            case GlobalStoreActionType.TOGGLE_DELETE_LIST_MODAL: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     deleteListId: store.deleteListId,
                     deleteListModalOpen: payload,
+                    markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
                 });
             }
@@ -245,13 +260,15 @@ export const useGlobalStore = () => {
     store.deletePlaylist = function() {
         async function asyncDeletePlaylistById() {
             let response = await api.deletePlaylistById(store.deleteListId);
-            if (response.data.success && response.data.deleteCount === 1) {
-                let response = await api.getAllPlaylistPairs();
+            if (response.data.success) {
+                let response = await api.getPlaylistPairs();
                 if (response.data.success) {
                     storeReducer({
                         type: GlobalStoreActionType.DELETE_LIST,
                         payload: response.data.idNamePairs
                     });
+                    store.toggleModals("delete-list-modal", false)
+                    store.loadIdNamePairs();
                 }
             }
         }
@@ -259,11 +276,18 @@ export const useGlobalStore = () => {
     }
 
     store.markListForDelete = function(id) {
-        storeReducer ({
-            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-            payload: id
-        });
-        store.toggleModals("delete-list-modal", true);
+        async function asyncMarkListForDelete(id) {
+            const response = await api.getPlaylistById(id);
+            if(response.data.success) {
+                storeReducer ({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload: [response.data.playlist._id, response.data.playlist, true]
+                });
+                // store.toggleModals("delete-list-modal", true);
+                
+            }
+        }
+        asyncMarkListForDelete(id);
     }
 
     store.toggleModals = function(type, mode) {

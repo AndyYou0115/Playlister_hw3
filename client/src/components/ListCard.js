@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
-import DeleteListModal from './DeleteListModal.js';
 
 /*
     This is a card in our list of playlists. It lets select
@@ -53,7 +52,8 @@ function ListCard(props) {
     }
 
     function handleDeleteList(event) {
-        let id = event.target.id.substring("list-".length);
+        event.stopPropagation();
+        let id = event.target.id.substring("delete-list-".length);
         store.markListForDelete(id);
     }
 
@@ -107,11 +107,7 @@ function ListCard(props) {
             />;
     }
     return (
-        <>
-            {cardElement}
-            <DeleteListModal></DeleteListModal>
-        </>
-  
+        cardElement
     );
 }
 
