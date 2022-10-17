@@ -561,6 +561,14 @@ export const useGlobalStore = () => {
         });
     }
 
+    store.doHasUndoTransaction = function() {
+        return tps.hasTransactionToUndo();
+    }
+
+    store.doHasRedoTransaction = function() {
+        return tps.hasTransactionToRedo();
+    }
+
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }

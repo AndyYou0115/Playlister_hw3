@@ -10,6 +10,10 @@ import { useHistory } from 'react-router-dom'
 function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
     const history = useHistory();
+    let canAddSong = "";
+    let canUndo = "";
+    let canRedo = "";
+    let canCloseList = "";
 
     let enabledButtonClass = "playlister-button";
 
@@ -27,6 +31,23 @@ function EditToolbar() {
     if (store.isListNameEditActive) {
         editStatus = true;
     }
+
+    if(store.deleteListModalOpen || store.deleteSongModalOpen || store.editSongModalOpen) {
+        canAddSong = " playlister-button-disabled";
+        canUndo = " playlister-button-disabled";
+        canRedo = " playlister-button-disabled";
+        canCloseList = " playlister-button-disabled";
+    }
+
+    if(!store.doHasUndoTransaction()) {
+        canUndo = " playlister-button-disabled";
+    }
+
+    if(!store.doHasRedoTransaction()) {
+        canRedo = " playlister-button-disabled";
+    }
+
+
     return (
         <span id="edit-toolbar">
             <input
@@ -35,7 +56,7 @@ function EditToolbar() {
                 id='add-song-button'
                 disabled={editStatus}
                 value="+"
-                className={enabledButtonClass}
+                className={enabledButtonClass+canAddSong}
                 onClick={() => {store.addAddSongTransaction()}}
             />
             <input
@@ -43,7 +64,7 @@ function EditToolbar() {
                 id='undo-button'
                 disabled={editStatus}
                 value="⟲"
-                className={enabledButtonClass}
+                className={enabledButtonClass+canUndo}
                 onClick={handleUndo}
             />
             <input
@@ -51,7 +72,7 @@ function EditToolbar() {
                 id='redo-button'
                 disabled={editStatus}
                 value="⟳"
-                className={enabledButtonClass}
+                className={enabledButtonClass+canRedo}
                 onClick={handleRedo}
             />
             <input
@@ -59,7 +80,7 @@ function EditToolbar() {
                 id='close-button'
                 disabled={editStatus}
                 value="&#x2715;"
-                className={enabledButtonClass}
+                className={enabledButtonClass+canCloseList}
                 onClick={handleClose}
             />
         </span>);

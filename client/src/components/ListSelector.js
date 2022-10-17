@@ -10,6 +10,7 @@ import { GlobalStoreContext } from '../store'
 const ListSelector = () => {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
+    let canAddList = "";
 
     useEffect(() => {
         store.loadIdNamePairs();
@@ -29,6 +30,13 @@ const ListSelector = () => {
             />
         ))
     }
+
+    if(store.deleteListModalOpen){
+        canAddList = " playlister-button-disabled";
+    } else {
+        canAddList = "";
+    }
+
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">
@@ -37,7 +45,7 @@ const ListSelector = () => {
                     type="button"
                     id="add-list-button"
                     onClick={handleCreateNewList}
-                    className="playlister-button"
+                    className={"playlister-button"+canAddList}
                     value="+" />
                 &nbsp;&nbsp;&nbsp;Your Lists
             </div> 
