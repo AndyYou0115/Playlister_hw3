@@ -1,5 +1,6 @@
 import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
 import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction.js';
+import EditSong_Transaction from '../transactions/EditSong_Transaction.js';
 
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
@@ -28,7 +29,9 @@ export const GlobalStoreActionType = {
     MARK_SONG_FOR_DELETION: "MARKED_SONG_FOR_DELETION",
     TOGGLE_DELETE_SONG_MODAL: "TOGGLE_DELETE_SONG_MODAL",
     UPDATE_MARKEDINDEX: "UPDATE_MARKEDINDEX",
-    UPDATE_MARKEDINFO: "UPDATE_MARKEDINFO"
+    UPDATE_MARKEDINFO: "UPDATE_MARKEDINFO",
+    MARK_SONG_FOR_EDIT: "MARK_SONG_FOR_EDIT",
+    TOGGLE_EDIT_SONG_MODAL: "TOGGLE_EDIT_SONG_MODAL"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -45,6 +48,7 @@ export const useGlobalStore = () => {
         markedId: "",
         deleteListModalOpen: false,
         deleteSongModalOpen: false,
+        editSongModalOpen: false,
         markedIndex: -1,
         markedInfo: null,
         listNameActive: false
@@ -64,6 +68,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -78,6 +83,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -92,6 +98,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -106,6 +113,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -120,6 +128,7 @@ export const useGlobalStore = () => {
                     markedId: payload[0],
                     deleteListModalOpen: payload[2],
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: payload[1],
                     listNameActive: false
@@ -134,6 +143,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -148,6 +158,7 @@ export const useGlobalStore = () => {
                     markedId: payload,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -162,6 +173,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: true
@@ -175,6 +187,7 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: payload,
                     deleteSongModalOpen: false,
+                    editSongModalOpen: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -188,6 +201,21 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: payload,
+                    editSongModalOpen: false,
+                    markedIndex: store.markedIndex,
+                    markedInfo: store.markedInfo,
+                    listNameActive: store.listNameActive
+                });
+            }
+            case GlobalStoreActionType.TOGGLE_EDIT_SONG_MODAL: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    markedId: store.markedId,
+                    deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    editSongModalOpen: payload,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -201,6 +229,21 @@ export const useGlobalStore = () => {
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: payload[2],
+                    editSongModalOpen: false,
+                    markedIndex: payload[0],
+                    markedInfo: payload[1],
+                    listNameActive: store.listNameActive
+                });
+            }
+            case GlobalStoreActionType.MARK_SONG_FOR_EDIT: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    markedId: store.markedId,
+                    deleteListModalOpen: false,
+                    deleteSongModalOpen: false,
+                    editSongModalOpen: payload[2],
                     markedIndex: payload[0],
                     markedInfo: payload[1],
                     listNameActive: store.listNameActive
@@ -212,8 +255,9 @@ export const useGlobalStore = () => {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
-                    deleteListModalOpen: false,
-                    deleteSongModalOpen: false,
+                    deleteListModalOpen: store.deleteListModalOpen,
+                    deleteSongModalOpen: store.deleteSongModalOpen,
+                    editSongModalOpen: store.editSongModalOpen,
                     markedIndex: payload,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -225,8 +269,9 @@ export const useGlobalStore = () => {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
-                    deleteListModalOpen: false,
-                    deleteSongModalOpen: false,
+                    deleteListModalOpen: store.deleteListModalOpen,
+                    deleteSongModalOpen: store.deleteSongModalOpen,
+                    editSongModalOpen: store.editSongModalOpen,
                     markedIndex: store.markedIndex,
                     markedInfo: payload,
                     listNameActive: store.listNameActive
@@ -279,6 +324,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        tps.clearAllTransactions();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -380,6 +426,19 @@ export const useGlobalStore = () => {
         asyncMarkSongForDelete();
     }
 
+    store.markSongForEdit = function(index) {
+        async function asyncMarkSongForEdit() {
+            const response = await api.getPlaylistById(store.currentList._id);
+            if(response.data.success) {
+                storeReducer ({
+                    type: GlobalStoreActionType.MARK_SONG_FOR_EDIT,
+                    payload: [index, response.data.playlist.songs[index], true]
+                });                
+            }
+        }
+        asyncMarkSongForEdit();
+    }
+
     store.addSong = function() {
         async function asyncAddSong() {
             if(store.currentList) {
@@ -398,7 +457,7 @@ export const useGlobalStore = () => {
             console.log(store);
             const response = await api.createSongAt(store.currentList._id, store.markedIndex, store.markedInfo.songs[store.markedIndex]);
             if(response.data.success) {
-                console.log(response.data.playlist);
+                //console.log(response.data.playlist);
                 store.setCurrentList(store.currentList._id);
             }
         }
@@ -419,6 +478,21 @@ export const useGlobalStore = () => {
         asyncDeleteSongAt();
     }
 
+    store.editSongAt = function(info) {
+        async function asyncEditSongAt() {
+            if(store.currentList) {
+                console.log(info);
+                console.log(store);
+                const response = await api.editSongAt(store.currentList._id, store.markedIndex, info);
+                if(response.data.success) {
+                    store.setCurrentList(store.currentList._id);
+                    console.log(store.currentList);
+                }
+            }
+        }
+        asyncEditSongAt();
+    }
+
     store.addAddSongTransaction = function() {
         let transaction = new AddSong_Transaction(store);
         tps.addTransaction(transaction);
@@ -428,8 +502,13 @@ export const useGlobalStore = () => {
         })
     }
 
-    store.addDeleteSongTransaction = function(index) {
+    store.addDeleteSongTransaction = function() {
         let transaction = new DeleteSong_Transaction(store);
+        tps.addTransaction(transaction);
+    }
+
+    store.addEditSongTransaction = function() {
+        let transaction = new EditSong_Transaction(store);
         tps.addTransaction(transaction);
     }
 
@@ -446,6 +525,19 @@ export const useGlobalStore = () => {
                 payload: mode
             });
         }
+        else if(type === "edit-song-modal") {
+            storeReducer({
+                type: GlobalStoreActionType.TOGGLE_EDIT_SONG_MODAL,
+                payload: mode
+            }); 
+        }
+    }
+
+    store.updateMarkedInfo = function(info) {
+        storeReducer ({
+            type: GlobalStoreActionType.UPDATE_MARKEDINFO,
+            payload: info
+        });
     }
 
     store.getPlaylistSize = function() {

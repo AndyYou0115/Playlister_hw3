@@ -6,8 +6,11 @@ function DeleteSongModal() {
         let name = "";
 
         if (store.markedInfo !== null) {
-            if(typeof store.markedInfo.songs === 'undefined' || store.markedIndex < 0 || store.markedInfo.songs.length <= 0) {
-                if(typeof store.markedInfo.songs[store.markedIndex] === 'undefined') {
+            if(typeof store.markedInfo.songs !== 'undefined' || store.markedIndex > -1 || store.markedInfo.songs.length >= 1) {
+                if(typeof store.markedInfo.songs === 'undefined') {
+                    name = "";
+                }
+                else if(typeof store.markedInfo.songs[store.markedIndex] === 'undefined') {
                     name = "";
                 }
                 else {
