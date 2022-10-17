@@ -36,6 +36,13 @@ const ListSelector = () => {
     } else {
         canAddList = "";
     }
+    
+    if (store.editListName){
+        canAddList = " playlister-button-disabled";
+    }
+    else {
+        canAddList = "";
+    }
 
     return (
         <div id="playlist-selector">

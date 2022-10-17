@@ -50,6 +50,7 @@ export const useGlobalStore = () => {
         deleteListModalOpen: false,
         deleteSongModalOpen: false,
         editSongModalOpen: false,
+        editListName: false,
         markedIndex: -1,
         markedInfo: null,
         listNameActive: false
@@ -70,6 +71,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -85,6 +87,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -100,6 +103,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -115,6 +119,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -130,6 +135,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: payload[2],
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: payload[1],
                     listNameActive: false
@@ -145,6 +151,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -160,6 +167,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: false
@@ -169,12 +177,13 @@ export const useGlobalStore = () => {
             case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: payload,
+                    currentList: payload[0],
                     newListCounter: store.newListCounter,
                     markedId: store.markedId,
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: payload[1],
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: true
@@ -189,6 +198,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: payload,
                     deleteSongModalOpen: false,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -203,6 +213,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: payload,
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -217,6 +228,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: payload,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -231,6 +243,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: payload[2],
                     editSongModalOpen: false,
+                    editListName: false,
                     markedIndex: payload[0],
                     markedInfo: payload[1],
                     listNameActive: store.listNameActive
@@ -245,6 +258,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: false,
                     deleteSongModalOpen: false,
                     editSongModalOpen: payload[2],
+                    editListName: false,
                     markedIndex: payload[0],
                     markedInfo: payload[1],
                     listNameActive: store.listNameActive
@@ -259,6 +273,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: store.deleteListModalOpen,
                     deleteSongModalOpen: store.deleteSongModalOpen,
                     editSongModalOpen: store.editSongModalOpen,
+                    editListName: false,
                     markedIndex: payload,
                     markedInfo: store.markedInfo,
                     listNameActive: store.listNameActive
@@ -273,6 +288,7 @@ export const useGlobalStore = () => {
                     deleteListModalOpen: store.deleteListModalOpen,
                     deleteSongModalOpen: store.deleteSongModalOpen,
                     editSongModalOpen: store.editSongModalOpen,
+                    editListName: false,
                     markedIndex: store.markedIndex,
                     markedInfo: payload,
                     listNameActive: store.listNameActive
@@ -585,7 +601,7 @@ export const useGlobalStore = () => {
     store.setListNameActive = function () {
         storeReducer({
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
-            payload: null
+            payload: [null, true]
         });
     }
 
