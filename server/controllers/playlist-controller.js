@@ -222,6 +222,31 @@ moveSong = async (req, res) => {
     })
 }
 
+updatePlaylistById = async (req, res) => {
+    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        list.name = req.body.listInfo.name;
+        list
+            .save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    playlist: list,
+                    message: 'Song Moved!',
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error,
+                    message: 'Song Not Moved!',
+                })
+            })
+    })
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
@@ -232,5 +257,6 @@ module.exports = {
     removeSongAt,
     createSongAt,
     editSongAt,
-    moveSong
+    moveSong,
+    updatePlaylistById
 }
