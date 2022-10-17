@@ -1,6 +1,7 @@
 import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
 import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction.js';
 import EditSong_Transaction from '../transactions/EditSong_Transaction.js';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js';
 
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
@@ -481,16 +482,27 @@ export const useGlobalStore = () => {
     store.editSongAt = function(info) {
         async function asyncEditSongAt() {
             if(store.currentList) {
-                console.log(info);
-                console.log(store);
+                //console.log(info);
+                //console.log(store);
                 const response = await api.editSongAt(store.currentList._id, store.markedIndex, info);
                 if(response.data.success) {
                     store.setCurrentList(store.currentList._id);
-                    console.log(store.currentList);
+                    //console.log(store.currentList);
                 }
             }
         }
         asyncEditSongAt();
+    }
+
+    store.moveSong = function(start, end) {
+        async function asyncMoveSong() {
+            console.log(start+" " +end);
+            const response = await api.moveSong(store.currentList._id, start, end);
+            if(response.data.success) {
+                store.setCurrentList(store.currentList._id);
+            }
+        }
+        asyncMoveSong();
     }
 
     store.addAddSongTransaction = function() {
@@ -509,6 +521,15 @@ export const useGlobalStore = () => {
 
     store.addEditSongTransaction = function() {
         let transaction = new EditSong_Transaction(store);
+        tps.addTransaction(transaction);
+    }
+
+    store.addMoveSongTransaction = function(start, end) {
+        // storeReducer ({
+        //     type: GlobalStoreActionType.UPDATE_MARKEDINDEX,
+        //     payload: [start, end]
+        // });
+        let transaction = new MoveSong_Transaction(store, start, end);
         tps.addTransaction(transaction);
     }
 

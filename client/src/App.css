@@ -105,6 +105,13 @@ body {
   font-size: 36pt;
 }
 
+.playlister-song, .playlister-song-dragged-to { 
+  display:flex;
+  align-items: center;
+  font-size: 24pt;
+  height:10%;
+}
+
 #add-list-button {
   float:left;
 }

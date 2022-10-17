@@ -30,6 +30,7 @@ export const createSong = (listId, newSong) => api.post(`/playlist/${listId}`, n
 export const removeSongAt = (listId, index) => api.delete(`/playlist/${listId}/${index}/deleteSong`)
 export const createSongAt = (listId, index, info) => api.post(`/playlist/${listId}/createSongAt`, {songIndex: index, songInfo: info})
 export const editSongAt = (listId, index, info) => api.put(`/playlist/${listId}/editSongAt`, {songIndex: index, songInfo: info})
+export const moveSong = (listId, start, end) => api.put(`/playlist/${listId}/moveSong`, {startIndex: start, endIndex: end})
 
 const apis = {
     getAllPlaylists,
@@ -40,7 +41,8 @@ const apis = {
     createSong,
     removeSongAt,
     createSongAt,
-    editSongAt
+    editSongAt,
+    moveSong
 }
 
 export default apis
