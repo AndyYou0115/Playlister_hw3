@@ -473,7 +473,7 @@ export const useGlobalStore = () => {
 
     store.addSongAt = function() {
         async function asyncAddSongAt() {
-            console.log(store);
+            //console.log(store);
             const response = await api.createSongAt(store.currentList._id, store.markedIndex, store.markedInfo.songs[store.markedIndex]);
             if(response.data.success) {
                 //console.log(response.data.playlist);
@@ -514,7 +514,7 @@ export const useGlobalStore = () => {
 
     store.moveSong = function(start, end) {
         async function asyncMoveSong() {
-            console.log(start+" " +end);
+            //console.log(start+" " +end);
             const response = await api.moveSong(store.currentList._id, start, end);
             if(response.data.success) {
                 store.setCurrentList(store.currentList._id);

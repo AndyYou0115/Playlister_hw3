@@ -26,16 +26,16 @@ function SongCard(props) {
 
     function handleDragOver(event) {
         event.preventDefault();
-        setDraggedTo(true);
+        setDraggedTo(false);
     }
     function handleDragEnter(event) {
         event.preventDefault();
-        setDraggedTo(true);
+        setDraggedTo(false);
 
     }
     function handleDragLeave(event) {
         event.preventDefault();
-        setDraggedTo(true);
+        setDraggedTo(false);
     }
     function handleDrop (event) {
         event.preventDefault();
@@ -52,7 +52,10 @@ function SongCard(props) {
     }
 
     if (draggedTo) {
-        itemClass = "playlister-song-dragged-to ";
+        itemClass = " playlister-song-dragged-to";
+    }
+    else {
+        itemClass = "";
     }
 
     return (
