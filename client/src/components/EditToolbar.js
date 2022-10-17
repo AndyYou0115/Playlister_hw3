@@ -32,7 +32,7 @@ function EditToolbar() {
         editStatus = true;
     }
 
-    if(store.deleteListModalOpen || store.deleteSongModalOpen || store.editSongModalOpen) {
+    if(store.deleteListModalOpen || store.deleteSongModalOpen || store.editSongModalOpen || store.currentList === null) {
         canAddSong = " playlister-button-disabled";
         canUndo = " playlister-button-disabled";
         canRedo = " playlister-button-disabled";
